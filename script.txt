@@ -1,0 +1,147 @@
+const movies = [
+  {
+    title: 'The Shawshank Redemption',
+    poster: 'Shawshank Redemption Poster.jpg',
+    genres: ['Action'],
+    rating: 9.3,
+    yearRelease: 1994,
+    metacriticRating: 80,
+    runtime: '142 min'
+  },
+  {
+	title: 'The Godfather',
+    poster: 'The Godfather Poster.jpg',
+    genres: ['Adventure'],
+    rating: 9.2,
+    yearRelease: 1972,
+    metacriticRating: 100,
+    runtime: '175 min'
+  },
+  {
+	title: 'The Dark Knight',
+    poster: 'The Dark Knight Poster.jpg',
+    genres: ['Adventure'],
+    rating: 9.0,
+    yearRelease: 2008,
+    metacriticRating: 84,
+    runtime: '152 min'
+  },
+  {
+	title: 'Pulp Fiction',
+    poster: 'Pulp Fiction Poster.jpg',
+    genres: ['Action'],
+    rating: 8.9,
+    yearRelease: 1994,
+    metacriticRating: 94,
+    runtime: '154 min'
+  },
+  {
+	title: 'Schindlers List',
+    poster: 'Schindlers List Poster.jpg',
+    genres: ['Adventure'],
+    rating: 8.9,
+    yearRelease: 1993,
+    metacriticRating: 94,
+    runtime: '195 min'
+  },
+  {
+	title: 'The Lord of the Rings: The Return of the King',
+    poster: 'The Lord of the Rings: The Return of the King Poster.jpg',
+    genres: ['Action'],
+    rating: 8.1,
+    yearRelease: 2003,
+    metacriticRating: 92,
+    runtime: '197 min'
+  },
+  {
+	title: 'Fight Club',
+    poster: 'Fight Club Poster.jpg',
+    genres: ['Adventure'],
+    rating: 8.8,
+    yearRelease: 1999,
+    metacriticRating: 66,
+    runtime: '140 min'
+  },
+  {
+	title: 'Forrest Gump',
+    poster: 'Forrest Gump Poster.jpg',
+    genres: ['Action'],
+    rating: 8.8,
+    yearRelease: 1994,
+    metacriticRating: 82,
+    runtime: '142 min'
+  },
+  {
+	title: 'Inception',
+    poster: 'Inception Poster.jpg',
+    genres: ['Adventure'],
+    rating: 8.8,
+    yearRelease: 1994,
+    metacriticRating: 82,
+    runtime: '142 min'
+  },
+  {
+	title: 'The Matrix',
+    poster: 'The Matrix Poster.jpg',
+    genres: ['Action'],
+    rating: 8.7,
+    yearRelease: 1990,
+    metacriticRating: 74,
+    runtime: '136 min'
+  },
+];
+
+const genreFilter = document.getElementById('genre-filter');
+const titleSearch = document.getElementById('title-search');
+const movieList = document.getElementById('movie-list');
+
+// Populate genre filter dropdown
+const allGenres = movies.reduce((genres, movie) => {
+  movie.genres.forEach(genre => {
+    if (!genres.includes(genre)) {
+      genres.push(genre);
+    }
+  });
+  return genres;
+}, []);
+
+allGenres.forEach(genre => {
+  const option = document.createElement('option');
+  option.value = genre;
+  option.textContent = genre;
+  genreFilter.appendChild(option);
+});
+
+// Update movie list based on filter and search
+function updateMovieList() {
+  const selectedGenres = Array.from(genreFilter.selectedOptions).map(option => option.value.toLowerCase());
+  const searchString = titleSearch.value.toLowerCase();
+
+  movieList.innerHTML = '';
+
+  movies.forEach(movie => {
+    const { title, poster, genres, rating, yearRelease, metacriticRating, runtime } = movie;
+
+    if ((selectedGenres.length === 0 || selectedGenres.some(genre => genres.includes(genre))) &&
+        (searchString === '' || title.toLowerCase().includes(searchString))) {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <h3>${title}</h3>
+        <img src="${poster}" alt="${title} Poster">
+        <p><strong>Genres:</strong> ${genres.join(', ')}</p>
+        <p><strong>Rating:</strong> ${rating}</p>
+        <p><strong>Year Release:</strong> ${yearRelease}</p>
+        <p><strong>Metacritic Rating:</strong> ${metacriticRating}</p>
+        <p><strong>Runtime:</strong> ${runtime}</p>
+      `;
+      movieList.appendChild(li);
+    }
+  });
+}
+
+// Event listeners for filter and search
+genreFilter.addEventListener('change', updateMovieList);
+titleSearch.addEventListener('input', updateMovieList);
+
+// Initial update to show all movies
+updateMovieList();
